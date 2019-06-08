@@ -4,9 +4,15 @@ export default {
         updateResourceId(value) {
             const fields = this.$parent.resource.fields;
             let formData = new FormData();
+            this.isBelongsToField(fields);
             Object.keys(fields).forEach((key)=> {
                 if (fields[key].attribute !== this.field.attribute){
-                    formData.append(fields[key].attribute, fields[key].value);
+                    if (fields[key].belongsToId === undefined) {
+                        formData.append(fields[key].attribute, fields[key].value);
+                    }
+                    else {
+                        formData.append(fields[key].attribute, fields[key].belongsToId);
+                    }
                 } else {
                     formData.append(fields[key].attribute, value);
                 }
@@ -33,6 +39,17 @@ export default {
                 return options[key].value == value;
             });
             return options[idx].label
+        },
+
+        isBelongsToField(fields){
+            let isBelongsToField = false;
+            Object.keys(fields).forEach((key) => {
+                console.log(fields[key].belongsToId);
+                isBelongsToField = true;
+            })
+
+            return isBelongsToField;
+
         }
     }
 }
